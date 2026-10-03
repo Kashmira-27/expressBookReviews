@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 
 let books = require("./booksdb.js");
 
@@ -9,6 +10,7 @@ let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
 
+// Register a new user
 public_users.post("/register", (req, res) => {
 
   const username = req.body.username;
@@ -38,8 +40,28 @@ public_users.post("/register", (req, res) => {
 
 
 // Get the book list available in the shop
+// Task 10: Axios + Async/Await
+public_users.get('/', async function (req, res) {
 
-public_users.get('/', function (req, res) {
+  try {
+
+    const response = await axios.get('http://localhost:5000/books');
+
+    res.status(200).json(response.data);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: "Error retrieving books"
+    });
+
+  }
+
+});
+
+
+// Internal route for Axios
+public_users.get('/books', function (req, res) {
 
   res.status(200).json(books);
 
@@ -47,7 +69,6 @@ public_users.get('/', function (req, res) {
 
 
 // Get book details based on ISBN
-
 public_users.get('/isbn/:isbn', function (req, res) {
 
   let isbn = req.params.isbn;
@@ -58,7 +79,9 @@ public_users.get('/isbn/:isbn', function (req, res) {
 
   } else {
 
-    res.status(404).json({ message: "Book not found" });
+    res.status(404).json({
+      message: "Book not found"
+    });
 
   }
 
@@ -66,7 +89,6 @@ public_users.get('/isbn/:isbn', function (req, res) {
 
 
 // Get book details based on author
-
 public_users.get('/author/:author', function (req, res) {
 
   let author = req.params.author;
@@ -89,7 +111,9 @@ public_users.get('/author/:author', function (req, res) {
 
   } else {
 
-    res.status(404).json({ message: "No books found for this author" });
+    res.status(404).json({
+      message: "No books found for this author"
+    });
 
   }
 
@@ -97,7 +121,6 @@ public_users.get('/author/:author', function (req, res) {
 
 
 // Get all books based on title
-
 public_users.get('/title/:title', function (req, res) {
 
   let title = req.params.title;
@@ -120,7 +143,9 @@ public_users.get('/title/:title', function (req, res) {
 
   } else {
 
-    res.status(404).json({ message: "No books found for this title" });
+    res.status(404).json({
+      message: "No books found for this title"
+    });
 
   }
 
@@ -128,7 +153,6 @@ public_users.get('/title/:title', function (req, res) {
 
 
 // Get book review
-
 public_users.get('/review/:isbn', function (req, res) {
 
   let isbn = req.params.isbn;
@@ -139,7 +163,9 @@ public_users.get('/review/:isbn', function (req, res) {
 
   } else {
 
-    res.status(404).json({ message: "Book not found" });
+    res.status(404).json({
+      message: "Book not found"
+    });
 
   }
 
