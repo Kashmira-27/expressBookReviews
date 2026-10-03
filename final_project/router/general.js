@@ -43,9 +43,20 @@ public_users.get('/isbn/:isbn',function (req, res) {
 
 public_users.get('/author/:author',function (req, res) {
 
-  //Write your code here
+  let author = req.params.author;
+  let result = {};
 
-  return res.status(300).json({message: "Yet to be implemented"});
+  Object.keys(books).forEach((isbn) => {
+    if (books[isbn].author === author) {
+      result[isbn] = books[isbn];
+    }
+  });
+
+  if (Object.keys(result).length > 0) {
+    res.status(200).json(result);
+  } else {
+    res.status(404).json({message: "No books found for this author"});
+  }
 
 });
 
